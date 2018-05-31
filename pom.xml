@@ -12,6 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<aip-version>4.3.2</aip-version>
 	</properties>
 
 	<dependencies>
@@ -20,6 +21,11 @@
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.baidu.aip</groupId>
+			<artifactId>java-sdk</artifactId>
+			<version>${aip-version}</version>
 		</dependency>
 	</dependencies>
 	<profile>
