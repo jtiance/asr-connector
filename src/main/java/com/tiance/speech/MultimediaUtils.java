@@ -9,17 +9,18 @@ import it.sauronsoftware.jave.EncodingAttributes;
 import it.sauronsoftware.jave.InputFormatException;
 
 /**
- * 对音频进行重编码
+ * 对音频进行重编码的工具类
  * 
  * @author jtian
  *
  */
-public class EncodeMultimedia {
+public class MultimediaUtils {
+
 	public static void main(String[] args) throws Exception {
 		File source = new File("d:\\audio\\android.mp3");
 		File target = new File("d:\\audio\\target.pcm");
 
-		mp3ToPcm(source, target);
+		convertMp3ToPcm(source, target);
 	}
 
 	/**
@@ -32,7 +33,7 @@ public class EncodeMultimedia {
 	 * @throws InputFormatException
 	 * @throws EncoderException
 	 */
-	public static void mp3ToPcm(File source, File target)
+	public static void convertMp3ToPcm(File source, File target)
 			throws IllegalArgumentException, InputFormatException, EncoderException {
 		EncodingAttributes attrs = new EncodingAttributes();
 		attrs.setFormat("s16le"); // 设置目标文件的封装格式,使用pcm的一种封装格式s16le

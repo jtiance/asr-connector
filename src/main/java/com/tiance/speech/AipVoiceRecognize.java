@@ -10,7 +10,7 @@ import com.baidu.aip.speech.AipSpeech;
  * @author jtian
  *
  */
-public class VoiceRecognize {
+public class AipVoiceRecognize {
 	// 从baidu云获取,设置APPID/AK/SK
 	public static final String APP_ID = "11318880";
 	public static final String API_KEY = "10FGV80epwTwo9EcPqIWRamc";
