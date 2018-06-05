@@ -17,6 +17,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>3.8.1</version>
@@ -27,6 +32,60 @@
 			<artifactId>java-sdk</artifactId>
 			<version>${aip-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-pubapp-application</artifactId>
+			<version>1.5.12-RELEASE</version>
+		</dependency>
+		<!-- 共享业务中心依赖 -->
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-share-api</artifactId>
+			<version>1.7.3-RELEASE</version>
+		</dependency>
+		<!-- 组织服务中心依赖 -->
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-orgcenter-api</artifactId>
+			<version>1.5.34-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.yyjz</groupId>
+					<artifactId>icop-database</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-usercenter-api</artifactId>
+			<version>1.5.32-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-commerce-api</artifactId>
+			<version>1.5.6-RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-financemgr-api</artifactId>
+			<version>1.5.4-RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.yyjz</groupId>
+					<artifactId>icop-business-doc-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.yyjz</groupId>
+					<artifactId>icop-pubapp-application</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.yyjz</groupId>
+			<artifactId>icop-permission-api</artifactId>
+			<version>1.5.12</version>
+		</dependency>
+
 	</dependencies>
 	<profile>
 		<id>jdk18</id>

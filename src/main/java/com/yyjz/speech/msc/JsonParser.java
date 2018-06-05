@@ -1,4 +1,4 @@
-package com.tiance.speech;
+package com.yyjz.speech.msc;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

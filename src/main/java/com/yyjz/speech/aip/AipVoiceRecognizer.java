@@ -1,4 +1,4 @@
-package com.tiance.speech;
+package com.yyjz.speech.aip;
 
 import org.json.JSONObject;
 
@@ -10,7 +10,7 @@ import com.baidu.aip.speech.AipSpeech;
  * @author jtian
  *
  */
-public class AipVoiceRecognize {
+public class AipVoiceRecognizer {
 	// 从baidu云获取,设置APPID/AK/SK
 	public static final String APP_ID = "11318880";
 	public static final String API_KEY = "10FGV80epwTwo9EcPqIWRamc";
@@ -28,7 +28,7 @@ public class AipVoiceRecognize {
 		// 也可以直接通过jvm启动参数设置此环境变量
 		System.setProperty("aip.log4j.conf", "log4j.properties");
 
-		String file = "d:\\target.pcm";
+		String file = "d:\\audio/target.pcm";
 		// 调用接口asr(文件, 格式, 采样率, null)
 		JSONObject res = client.asr(file, "pcm", 16000, null);
 		System.out.println(res.toString(2));

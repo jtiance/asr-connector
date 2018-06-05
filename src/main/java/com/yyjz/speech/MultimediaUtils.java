@@ -1,4 +1,4 @@
-package com.tiance.speech;
+package com.yyjz.speech;
 
 import java.io.File;
 
@@ -17,8 +17,8 @@ import it.sauronsoftware.jave.InputFormatException;
 public class MultimediaUtils {
 
 	public static void main(String[] args) throws Exception {
-		File source = new File("d:\\audio\\android.mp3");
-		File target = new File("d:\\audio\\target.pcm");
+		File source = new File("d:\\audio\\new2.mp3");
+		File target = new File("./audio/new3.pcm");
 
 		convertMp3ToPcm(source, target);
 	}
