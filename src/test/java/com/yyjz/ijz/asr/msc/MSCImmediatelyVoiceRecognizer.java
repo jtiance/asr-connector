@@ -1,4 +1,4 @@
-package com.yyjz.speech.msc;
+package com.yyjz.ijz.asr.msc;
 
 import java.util.Map.Entry;
 import java.util.Scanner;

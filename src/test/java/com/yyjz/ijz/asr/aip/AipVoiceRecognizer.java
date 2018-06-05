@@ -1,5 +1,6 @@
-package com.yyjz.speech.aip;
+package com.yyjz.ijz.asr.aip;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.baidu.aip.speech.AipSpeech;
@@ -16,7 +17,7 @@ public class AipVoiceRecognizer {
 	public static final String API_KEY = "10FGV80epwTwo9EcPqIWRamc";
 	public static final String SECRET_KEY = "iDnODuyhkp9weYtrGTIXwWlt5KCsPbWR1";
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws JSONException {
 		// 初始化一个AipSpeech
 		AipSpeech client = new AipSpeech(APP_ID, API_KEY, SECRET_KEY);
 

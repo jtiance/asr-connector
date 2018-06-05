@@ -1,4 +1,4 @@
-package com.yyjz.speech.msc;
+package com.yyjz.ijz.asr.msc;
 
 import java.io.File;
 import java.io.FileWriter;

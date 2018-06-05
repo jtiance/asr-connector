@@ -1,4 +1,4 @@
-package com.yyjz.speech.msc;
+package com.yyjz.ijz.asr.msc;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

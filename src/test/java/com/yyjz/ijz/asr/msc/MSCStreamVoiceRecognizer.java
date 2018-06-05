@@ -1,4 +1,4 @@
-package com.yyjz.speech.msc;
+package com.yyjz.ijz.asr.msc;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
