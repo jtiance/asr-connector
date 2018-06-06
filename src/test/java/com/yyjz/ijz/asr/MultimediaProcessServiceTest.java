@@ -15,7 +15,7 @@ public class MultimediaProcessServiceTest {
 	private MultimediaProcessService multimediaProcessService;
 
 	@Test
-	public void testRecognizeMP3Stream() {
+	public void testRecognizeMP3Stream() throws Exception {
 		System.out.println("start to test testRecognizeMP3Stream");
 
 		multimediaProcessService = new MultimediaProcessServiceImpl();
@@ -26,7 +26,7 @@ public class MultimediaProcessServiceTest {
 		try {
 			fis = new FileInputStream(file);
 
-			multimediaProcessService.recognizeMP3Stream(fis);
+			multimediaProcessService.recognizeMP3Stream(fis, "d:/");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} finally {
