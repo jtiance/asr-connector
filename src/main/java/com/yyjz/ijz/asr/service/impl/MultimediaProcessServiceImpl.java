@@ -7,11 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.iflytek.cloud.speech.RecognizerListener;
 import com.iflytek.cloud.speech.RecognizerResult;
 import com.iflytek.cloud.speech.SpeechConstant;
@@ -42,18 +38,16 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 	private static Logger logger = LoggerFactory.getLogger(MultimediaProcessServiceImpl.class);
 
 	// 保存的mp3等多媒体文件的路径前缀
-	private static final String FILE_LOCATION_PREFIX = "../multimedia";
-
-	private static SimpleDateFormat folderFormat = new SimpleDateFormat("yyyyMMddHH");
+	private static final String FILE_LOCATION_PREFIX = "multimedia";
 
 	private static Encoder encoder = new Encoder(); // 多媒体转码类
 
 	@Override
-	public String recognizeMP3Stream(InputStream inputStream) {
+	public String recognizeMP3Stream(InputStream inputStream, String targetPath) throws Exception {
 		String filePath = null, pcmFilePath = null, result = null;
 		try {
 			// 保存原始录音文件
-			filePath = storeStreamAsDefaultRule(inputStream);
+			filePath = storeStreamAsDefaultRule(inputStream, targetPath);
 
 			// 转码为可识别的pcm文件
 			pcmFilePath = convertMp3ToPcm(filePath);
@@ -77,7 +71,8 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 		}
 	}
 
-	private static String recognizePCM(String pcmFilePath) {
+	private static String recognizePCM(String pcmFilePath) throws Exception {
+
 		// XXX tiance:加载appid,目前appid为我个人申请的, 后续需要改为公司的
 		String app_id = "5b0fac06";
 		SpeechUtility.createUtility(SpeechConstant.APPID + "=" + app_id);
@@ -96,6 +91,7 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 			}
 		} catch (IOException e) {
 			logger.error("file not found:" + pcmFilePath, e);
+			throw new Exception("读取转码后的数据流失败:" + file.getName());
 		}
 
 		// 切割byte流为语音识别可识别的4800长度
@@ -138,6 +134,7 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 
 		};
 
+		long startTime = System.currentTimeMillis();
 		// 开始监听数据
 		mIat.startListening(listener);
 		for (int i = 0; i < buffers.size(); i++) {
@@ -155,8 +152,10 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 				}
 			}
 		} catch (InterruptedException e) {
-			logger.error("error while waiting for AsrResult,e");
+			logger.error("error while waiting for AsrResult", e);
 		}
+		long endTime = System.currentTimeMillis();
+		logger.info("mp3 recognize totally cost:" + (endTime - startTime) / 1000);
 
 		return sb.toString();
 
@@ -205,7 +204,7 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 	 * @throws InputFormatException
 	 * @throws EncoderException
 	 */
-	private static String convertMp3ToPcm(String filePath) {
+	private static String convertMp3ToPcm(String filePath) throws Exception {
 		EncodingAttributes attrs = new EncodingAttributes();
 		attrs.setFormat("s16le"); // 设置目标文件的封装格式,使用pcm的一种封装格式s16le
 
@@ -215,7 +214,7 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 		audio.setSamplingRate(16000); // 设置采样率
 		audio.setChannels(1); // 设置声道数,即单声道
 		attrs.setAudioAttributes(audio);
-		// XXX TIANCE: 转码后的文件语音时常被压缩，这里还需要深入研究一下.
+		// 转码后的文件语音时常被压缩，这里还需要深入研究一下.
 
 		String pcmFilePath = filePath.replace(".mp3", ".pcm");
 
@@ -225,7 +224,7 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 			return pcmFilePath;
 		} catch (IllegalArgumentException | EncoderException e) {
 			logger.error("error while encoding multimedia, file is:" + filePath, e);
-			return null;
+			throw new Exception("MP3转码中遇到问题, 请检查源文件是否为MP3格式.");
 		}
 	}
 
@@ -236,8 +235,8 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 	 *            将要保存的数据流
 	 * @return 保存路径
 	 */
-	private static String storeStreamAsDefaultRule(InputStream inputStream) {
-		return storeStreamAsDefaultRule(inputStream, ".mp3");// 默认mp3格式
+	private static String storeStreamAsDefaultRule(InputStream inputStream, String targetPath) throws Exception {
+		return storeStreamAsDefaultRule(inputStream, targetPath, ".mp3");// 默认mp3格式
 	}
 
 	/**
@@ -249,15 +248,18 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 	 *            数据流应该被保存成的文件后缀
 	 * @return 保存路径
 	 */
-	private static String storeStreamAsDefaultRule(InputStream inputStream, String suffix) {
-
+	private static String storeStreamAsDefaultRule(InputStream inputStream, String targetPath, String suffix)
+			throws Exception {
 		FileOutputStream fos = null;
 		try {
 			byte[] content = readBytesFromStream(inputStream);
 			logger.debug("reads bytes:" + content.length);
 
 			// 创建将要保存的文件信息
-			String targetFolderPath = FILE_LOCATION_PREFIX + File.separator + folderFormat.format(new Date());
+			if (!targetPath.endsWith("\\")) {
+				targetPath += File.separator;
+			}
+			String targetFolderPath = targetPath + FILE_LOCATION_PREFIX;
 			File targetFolder = new File(targetFolderPath);
 			if (!targetFolder.exists()) {
 				targetFolder.mkdirs();
@@ -278,14 +280,15 @@ public class MultimediaProcessServiceImpl implements MultimediaProcessService {
 			return filePath;
 		} catch (IOException e) {
 			logger.error("error while store multimedia in file system.", e);
+			throw new Exception("保存提交的数据流时发生异常.");
 		} finally {
 			try {
-				fos.close();
+				if (fos != null)
+					fos.close();
 			} catch (IOException e) {
 				logger.error("error while closing FileOutputStream", e);
 			}
 		}
-		return null;
 
 	}
 

@@ -17,5 +17,5 @@ public interface MultimediaProcessService {
 	 *            mp3格式的数据流
 	 * @return 被识别后的字符串
 	 */
-	String recognizeMP3Stream(InputStream inputStream);
+	String recognizeMP3Stream(InputStream inputStream, String targetPath) throws Exception;
 }
